@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[18]:
-
-
 code='035420'
 
 import requests
@@ -12,16 +9,8 @@ res = requests.get(url)
 res.encoding = 'utf-8'
 res.status_code
 
-
-# In[19]:
-
-
 from bs4 import BeautifulSoup
 soap = BeautifulSoup(res.text, 'lxml')
-
-
-# In[20]:
-
 
 el_table_navi = soap.find("table", class_="Nnavi")
 el_td_last = el_table_navi.find("td", class_="pgRR")
@@ -29,10 +18,6 @@ pg_last = el_td_last.a.get('href').rsplit('&')[1]
 pg_last = pg_last.split('=')[1]
 pg_last = int(pg_last)
 pg_last
-
-
-# In[21]:
-
 
 import traceback
 import pandas as pd
@@ -49,30 +34,14 @@ def parse_page(code, page):
         traceback.print_exc()
     return None
 
-
-# In[22]:
-
-
 parse_page(code, 1)
-
-
-# In[23]:
-
 
 import datetime
 str_datefrom = datetime.datetime.strftime(datetime.datetime(year=2015, month=1, day=1), '%Y.%m.%d')
 str_datefrom
 
-
-# In[24]:
-
-
 str_dateto = datetime.datetime.strftime(datetime.datetime.today(), '%Y.%m.%d')
 str_dateto
-
-
-# In[25]:
-
 
 df = None
 for page in range(1, pg_last+1):
@@ -85,15 +54,7 @@ for page in range(1, pg_last+1):
     if len(_df) > len(_df_filtered):
         break
 
-
-# In[30]:
-
-
 df.head()
-
-
-# In[27]:
-
 
 import os
 path_dir = 'C:\Users\stat113-00\Documents\Python Scripts'
@@ -101,9 +62,5 @@ if not os.path.exists(path_dir):
     os.makedirs(path_dir)
 path = os.path.join(path_dir, '{code}_{date_from}_{date_to}.csv'.format(code=code, date_from=str_datefrom, date_to=str_dateto))
 path
-
-
-# In[31]:
-
 
 df.to_csv(path, index=False)
